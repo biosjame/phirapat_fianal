@@ -21,12 +21,12 @@ const db = mysql.createConnection({
     host: "172.18.112.1",
     user: "jame",
     password: "1234",
-    database: 'finalxampp'
+    database: 'gameshop'
 });
 // show data
 app.get('/data', function(req,res){
     console.log("Hello in /data ");
-    let sql = 'SELECT * FROM users;';
+    let sql = 'SELECT * FROM gamedatabase left join datatype on datatype.idgame = gamedatabase.linkgame;';
     db.query(sql, (err, result)=>{
         if(err) throw err;
         console.log(result);
@@ -34,10 +34,19 @@ app.get('/data', function(req,res){
     });
     console.log("after query");
 });
-
+app.get('/datatype', function(req,res){
+    console.log("Hello in /datatype ");
+    let sql = 'SELECT * FROM datatype;';
+    db.query(sql, (err, result)=>{
+        if(err) throw err;
+        console.log(result);
+        res.json(result);
+    });
+    console.log("after query");
+});
 //delete
 app.put('/delete', function(req, res) {
-    var sql = 'DELETE FROM users WHERE id = ?';
+    var sql = 'DELETE FROM gamedatabase WHERE id = ?';
     db.query(sql,[req.body.idkey],function (error, results) {
         if(error) throw error;
         res.send(JSON.stringify(results));
@@ -46,8 +55,8 @@ app.put('/delete', function(req, res) {
 
 //edit
 app.put('/data', function(req, res) {
-    var sql = 'UPDATE users SET firstname= ? , lastname = ? WHERE id = ?';
-    db.query(sql,[req.body.firstname,req.body.lastname,req.body.idkey,req.body.timestamp],function (error, results) {
+    var sql = 'UPDATE gamedatabase SET name= ? , gametype = ? , buyall = ?  WHERE id = ?';
+    db.query(sql,[req.body.name,req.body.gametype,req.body.buyall,req.body.idkey],function (error, results) {
         if(error) throw error;
         res.send(JSON.stringify(results));
     });
@@ -57,13 +66,13 @@ app.put('/data', function(req, res) {
 app.post('/data', function(req, res){
     console.log(req.body);
     let data = {
-        timestamp:req.body.timestamp,
         id:req.body.idkey,
-        firstname:req.body.firstname,
-        lastname:req.body.lastname,
-        email:req.body.email,
+        name:req.body.name,
+        gametype:req.body.gametype,
+        buyall:req.body.buyall,
+        linkgame:req.body.linkgame
     };
-    let sql = 'INSERT INTO users SET ?';
+    let sql = 'INSERT INTO gamedatabase SET ?';
     db.query(sql, data, (err, result)=>{
         if(err){
             console.log(err);

@@ -10,10 +10,10 @@ export default class Showdata extends Component{
         super();
         this.state ={
             list:[],
-            timestamp:"",
+            name:"",
             idkey:"",
-            firstname:"",
-            lastname:""
+            buyall:"",
+            datatype:""
         }
         this.handleChang = this.handleChang.bind(this);
         this.handleClicked = this.handleClicked.bind(this);
@@ -55,10 +55,12 @@ export default class Showdata extends Component{
     call=(user)=>{
         this.openModal();
         this.setState({
-            timestamp:user.timestamp,
+            name:user.name,
             idkey:user.id,
-            firstname:user.firstname,
-            lastname:user.lastname
+           
+            buyall:user.buyall,
+            datatype:user.datatype
+         
         })
     }
     handleChang = (e) => {
@@ -67,10 +69,13 @@ export default class Showdata extends Component{
         });
         let url = `https://localhost:3000/data`;
         let data = {
-            timestamp:this.state.timestamp,
+            name:this.state.name,
             idkey:this.state.idkey,
-            firstname:this.state.firstname,
-            lastname:this.state.lastname
+           // gametype:this.state.gametype,
+            buyall:this.state.buyall,
+            datatype:this.state.datatype
+            
+          
         }
         axios.put(url,data)
     }
@@ -78,17 +83,20 @@ export default class Showdata extends Component{
     handleClicked(){
         let url = `https://localhost:3000/data`;
         let data = {
-            timestamp:this.state.timestamp,
+            name:this.state.name,
             idkey:this.state.idkey,
-            firstname:this.state.firstname,
-            lastname:this.state.lastname
+            gametype:this.state.gametype,
+            buyall:this.state.buyall,
+            datatype:this.state.datatype
+           
         }
         axios.put(url,data)
         this.setState({
-            timestamp:"",
+            name:"",
             idkey:"",
-            firstname:"",
-            lastname:""
+            gametype:"",
+            buyall:""
+        
         });
 	this.closeModal();
         setTimeout(()=>{this.componentDidMount()},1)
@@ -98,28 +106,26 @@ export default class Showdata extends Component{
 
         return (
             <div className="App">
-                <h2 className="my-4">Users Information<br/></h2>
+                <h2 className="my-4">โชว์การเล่นเกมประเภทต่างๆของวัยรุ่น<br/></h2>
                 <hr/>
                 <div className="container p-3 my-3 bg-dark text-white">
                     <table className="table table-dark">
                         <thead>
                             <tr>
-                            <th>timestamp</th> 
-                            <th>ID</th>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>E=mail</th>
+                            <th>id</th> 
+                            <th>ชื่อ</th>
+                            <th>ประเภทของเกม</th>
+                            <th>เสียไปกี่บาท</th>
                             </tr>
                         </thead>
                         <tbody>
                                 {list.map((user) =>{
                                     return(
                                         <tr>
-                                            <td>{user.timestamp}</td>
                                             <td>{user.id}</td>
-                                            <td>{user.firstname}</td>
-                                            <td>{user.lastname}</td>
-                                            <td>{user.email}</td>
+                                            <td>{user.name}</td>
+                                            <td>{user.gametype}</td>
+                                            <td>{user.buyall}</td>
                                             <td><button type="button" class="btn btn-warning" onClick={()=>this.call(user)}>Edit</button></td>
                                             <td><button type="button" class="btn btn-danger"  onClick={()=>this.onDelete(user)}>Delete</button></td>
                                             <div className="box">
@@ -130,19 +136,21 @@ export default class Showdata extends Component{
                                                        onClickAway={() => this.closeModal()}
                                                 >
                                                     <form className="container" id='form'>
-                                                    <div className="form-group">
-                                                            <h3><label htmlFor="id">TimeStamp: {this.state.timestamp}<br/></label></h3>
+                                                    
+                                                        <div className="form-group">
+                                                            <h3><label htmlFor="id">id: {this.state.idkey}<br/></label></h3>
                                                         </div>
                                                         <div className="form-group">
-                                                            <h3><label htmlFor="id">ID: {this.state.idkey}<br/></label></h3>
+                                                            <label>name:</label>
+                                                            <input type="text" className="form-control" id="name" onChange={this.handleChang} value={this.state.name}/>
                                                         </div>
                                                         <div className="form-group">
-                                                            <label>firstname:</label>
-                                                            <input type="text" className="form-control" id="firstname" onChange={this.handleChang} value={this.state.firstname}/>
+                                                            <label>gametype:</label>
+                                                            <input type="text" className="form-control" id="gametype" onChange={this.handleChang} value={this.state.gametype}/>
                                                         </div>
                                                         <div className="form-group">
-                                                            <label>lasttname:</label>
-                                                            <input type="text" className="form-control" id="lastname" onChange={this.handleChang} value={this.state.lastname}/>
+                                                            <label>buyall:</label>
+                                                            <input type="text" className="form-control" id="buyall" onChange={this.handleChang} value={this.state.buyall}/>
                                                         </div>
                                                         <button type="button" className="btn btn-primary" onClick={this.handleClicked}>Submit</button>
                                                     </form>
